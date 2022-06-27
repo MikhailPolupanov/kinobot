@@ -5,7 +5,9 @@ from telegram.ext import ConversationHandler
 def anketa_start(update, context):
     update.message.reply_text(
         f'Выбери, что ты хочешь подобрать', 
-        reply_markup=ReplyKeyboardMarkup([['Подобрать фильм', 'Подобрать сериал']], one_time_keyboard=True)
+        reply_markup=ReplyKeyboardMarkup([['Подобрать фильм', 'Подобрать сериал']], 
+        one_time_keyboard=True, 
+        resize_keyboard=True)
     )
     return 'type'
 
@@ -14,8 +16,13 @@ def movie_type(update, context):
     type_choice = str(update.message.text)
     context.user_data['anketa'] = {'type': type_choice.split()[1]}
     reply_keyboard = [['Да, хочу чтобы была премия','Наличие премии не важно']]
-    update.message.reply_text(f'Отлично, теперь я буду задавать тебе вопросы, которые помогут мне при подборке! \nВы можете пропустить любой вопрос, нажав на кнопку "не важно" \nВопрос №1: важно ли, чтобы у фильма или сериала была премия Оскар или Эмми?',
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    update.message.reply_text(
+        f'Отлично, теперь я буду задавать тебе вопросы, которые помогут мне при подборке! \nВы можете пропустить любой вопрос, нажав на кнопку "не важно" \nВопрос №1: важно ли, чтобы у фильма или сериала была премия Оскар или Эмми?',
+        reply_markup=ReplyKeyboardMarkup(
+            reply_keyboard, 
+            one_time_keyboard=True, 
+            resize_keyboard=True
+        )
     )
     return 'oskar'
 
@@ -28,28 +35,46 @@ def anketa_oskar(update, context):
         context.user_data['anketa']['oskar'] = 'yes'
         update.message.reply_text(
             f'Введите желаемый жанр, можно ввести несколько через запятую. \nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                reply_keyboard1,
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'genre'
     elif oskar_choice.lower() == 'да': 
         context.user_data['anketa']['oskar'] = 'yes'
         update.message.reply_text(
             f'Введите желаемый жанр, можно ввести несколько через запятую.\nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                reply_keyboard1, 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'genre'
+    
     elif oskar_choice == 'Наличие премии не важно':
         context.user_data['anketa']['oskar'] = 'no'
         update.message.reply_text(
             f'Введите желаемый жанр, можно ввести несколько через запятую.\nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                reply_keyboard1, 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'genre'
+    
     elif oskar_choice.lower() == 'нет': 
         context.user_data['anketa']['oskar'] = 'no'
         update.message.reply_text(
             f'Введите желаемый жанр, можно ввести несколько через запятую.\nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                reply_keyboard1, 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'genre'
 
@@ -63,7 +88,11 @@ def genre(update,context):
         context.user_data['anketa']['genre'] = 'not set'
         update.message.reply_text(
             f'Укажите режиссера, можно ввести несколько через запятую.\nНажмите кнопку "Режиссер не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup([['Режиссер не важен']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Режиссер не важен']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'director'
     else:
@@ -78,7 +107,11 @@ def genre(update,context):
             #update.message.reply_text(f'Тип: {context.user_data["anketa"]["type"]}, Премия: {context.user_data["anketa"]["oskar"]}, Жанр: {context.user_data["anketa"]["genre"]}') 
             update.message.reply_text(
                 f'Укажите режиссера, можно ввести несколько через запятую.\nНажмите кнопку "Режиссер не важен", чтобы пропустить вопрос', 
-                reply_markup=ReplyKeyboardMarkup([['Режиссер не важен']], one_time_keyboard=True)
+                reply_markup=ReplyKeyboardMarkup(
+                    [['Режиссер не важен']], 
+                    one_time_keyboard=True, 
+                    resize_keyboard=True
+                )
             )
             return 'director'
 
@@ -89,14 +122,21 @@ def director(update, context):
         context.user_data['anketa']['director'] = 'not set'
         update.message.reply_text(
             f'Укажите актера, можно ввести несколько через запятую.\nНажмите кнопку "Актер не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup([['Актер не важен']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Актер не важен']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'actor'
     else:
         context.user_data['anketa']['director'] = directors
         update.message.reply_text(
             f'Укажите актера, можно ввести несколько через запятую.\nНажмите кнопку "Актер не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup([['Актер не важен']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup([['Актер не важен']], 
+            one_time_keyboard=True, 
+            resize_keyboard=True
+        )
         ) 
         #update.message.reply_text(f'Тип: {context.user_data["anketa"]["type"]}, Премия: {context.user_data["anketa"]["oskar"]}, Жанр: {context.user_data["anketa"]["genre"]}, режиссер: {context.user_data["anketa"]["director"]}') 
         return 'actor'
@@ -108,14 +148,22 @@ def actor(update, context):
         context.user_data['anketa']['actor'] = 'not set'
         update.message.reply_text(
             f'Укажите год выпуска фильма, можно ввести период в несколько лет в формате "2000 - 2010" (не забудьте разделить пробелами).\nНажмите кнопку "Год выпуска не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup([['Год выпуска не важен']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Год выпуска не важен']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'years'
     else:
         context.user_data['anketa']['actor'] = actors
         update.message.reply_text(
             f'Укажите год выпуска фильма, можно ввести период в несколько лет в формате "2000 - 2010" (не забудьте разделить пробелами).\nНажмите кнопку "Год выпуска не важен", чтобы пропустить вопрос', 
-            reply_markup=ReplyKeyboardMarkup([['Год выпуска не важен']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Год выпуска не важен']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'years'
 
@@ -128,7 +176,11 @@ def years(update, context):
         context.user_data['anketa']['year_finish'] = 'not set'
         update.message.reply_text(
                 f'Укажите страну выпуска фильма, можно ввести несколько через запятую\nНажмите кнопку "Страна выпуска не важна", чтобы пропустить вопрос', 
-                reply_markup=ReplyKeyboardMarkup([['Страна выпуска не важна']], one_time_keyboard=True)
+                reply_markup=ReplyKeyboardMarkup(
+                    [['Страна выпуска не важна']], 
+                    one_time_keyboard=True, 
+                    resize_keyboard=True
+                )
                 )
         return 'country'
     else:
@@ -138,7 +190,11 @@ def years(update, context):
                 context.user_data['anketa']['year_finish'] = int(year_list[2])
                 update.message.reply_text(
                 f'Укажите страну выпуска фильма, можно ввести несколько через запятую\nНажмите кнопку "Страна выпуска не важна", чтобы пропустить вопрос', 
-                reply_markup=ReplyKeyboardMarkup([['Страна выпуска не важна']], one_time_keyboard=True)
+                reply_markup=ReplyKeyboardMarkup(
+                    [['Страна выпуска не важна']], 
+                    one_time_keyboard=True, 
+                    resize_keyboard=True
+                )
                 )
 
                 return 'country'
@@ -147,7 +203,11 @@ def years(update, context):
                 context.user_data['anketa']['year_finish'] = int(year)
                 update.message.reply_text(
                 f'Укажите страну выпуска фильма, можно ввести несколько через запятую\nНажмите кнопку "Страна выпуска не важна", чтобы пропустить вопрос', 
-                reply_markup=ReplyKeyboardMarkup([['Страна выпуска не важна']], one_time_keyboard=True)
+                reply_markup=ReplyKeyboardMarkup(
+                    [['Страна выпуска не важна']], 
+                    one_time_keyboard=True, 
+                    resize_keyboard=True
+                )
                 )
                 return 'country'
         except:
@@ -165,7 +225,11 @@ def country(update, context):
         context.user_data['anketa']['country'] = 'not set'
         update.message.reply_text(
             f'Ну и последнее: укажите фильмы, которые бы вы не хотели видеть в предложенных.\nМожно ввести несколько через запятую \nЕсли таких фильмов нет, то нажмите на кнопку "Таких фильмов нет"', 
-            reply_markup=ReplyKeyboardMarkup([['Таких фильмов нет']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Таких фильмов нет']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
 
         return 'not_want'
@@ -183,7 +247,11 @@ def country(update, context):
             context.user_data['anketa']['country'] = countries.lower().split(',')
             update.message.reply_text(
                 f'Ну и последнее: укажите фильмы, которые бы вы не хотели видеть в предложенных.\nМожно ввести несколько через запятую\nЕсли таких фильмов нет, то нажмите на кнопку "Таких фильмов нет"', 
-                reply_markup=ReplyKeyboardMarkup([['Таких фильмов нет']], one_time_keyboard=True)
+                reply_markup=ReplyKeyboardMarkup(
+                    [['Таких фильмов нет']], 
+                    one_time_keyboard=True, 
+                    resize_keyboard=True
+                )
             )
 
             return 'not_want'
@@ -208,7 +276,11 @@ def not_want(update, context):
     update.message.reply_text('Дайте мне немного времени')
     update.message.reply_text(
         f'Вот ваша подборка: {final_movie_list[:5]}',
-        reply_markup=ReplyKeyboardMarkup([['Следующие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
+        reply_markup=ReplyKeyboardMarkup(
+            [['Следующие 5 фильмов', 'Я нашел нужный фильм']], 
+            one_time_keyboard=True, 
+            resize_keyboard=True
+        )
     )
     return 'final_task'
 
@@ -219,13 +291,21 @@ def other_five_movies(update, context):
     if len(final_movie_list) > 0:
         update.message.reply_text(
             f'Ваши следующие 5 фильмов: {final_movie_list[:5]}',
-            reply_markup=ReplyKeyboardMarkup([['Следующие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Следующие 5 фильмов', 'Я нашел нужный фильм']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return 'final_task'
     else:
         update.message.reply_text(
             f'Фильмы, подходящие по параметрам закончились, попробуйте задать другие параметры', 
-            reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Вернуться в начало']], 
+                one_time_keyboard=True, 
+                resize_keyboard=True
+            )
         )
         return ConversationHandler.END   
 
@@ -234,7 +314,11 @@ def final_task(update, context):
 
     update.message.reply_text(
         f'Рад был помочь!', 
-        reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True)
+        reply_markup=ReplyKeyboardMarkup(
+            [['Вернуться в начало']], 
+            one_time_keyboard=True, 
+            resize_keyboard=True
+        )
     )
     return ConversationHandler.END
     

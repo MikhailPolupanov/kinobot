@@ -19,7 +19,11 @@ def users_movies(update, context):
     update.message.reply_text('Дайте мне немного времени')
     update.message.reply_text(
         f'Вот ваша подборка: {final_movie_list_reco[:5]}',
-        reply_markup=ReplyKeyboardMarkup([['Другие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
+        reply_markup=ReplyKeyboardMarkup(
+            [['Другие 5 фильмов', 'Я нашел нужный фильм']], 
+            one_time_keyboard=True,
+            resize_keyboard=True
+        )
     )
     return 'final_reco'
 
@@ -30,16 +34,32 @@ def other_five_movies_reco(update, context):
     if len(final_movie_list_reco) > 0:
         update.message.reply_text(
             f'Ваши следующие 5 фильмов: {final_movie_list_reco[:5]}',
-            reply_markup=ReplyKeyboardMarkup([['Другие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
+            reply_markup=ReplyKeyboardMarkup(
+                [['Другие 5 фильмов', 'Я нашел нужный фильм']], 
+                one_time_keyboard=True,
+                resize_keyboard=True
+            )
         )
         return 'final_reco'
     else:
-        update.message.reply_text(f'Фильмы, похожие на ваши закончились, попробуйте указать другие', reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True))
+        update.message.reply_text(
+            f'Фильмы, похожие на ваши, закончились, попробуйте указать другие', 
+            reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], 
+            one_time_keyboard=True,
+            resize_keyboard=True
+        )
+        )
         return ConversationHandler.END  
 
 
 def final_reco(update, context):
-    update.message.reply_text(f'Рад был помочь!', reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True))
+    update.message.reply_text(
+        f'Рад был помочь!', 
+        reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], 
+        one_time_keyboard=True,
+        resize_keyboard=True
+    )
+    )
     return ConversationHandler.END
 
 

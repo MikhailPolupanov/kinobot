@@ -31,7 +31,10 @@ def main():
         'years': [MessageHandler(Filters.text, years)],
         'country': [MessageHandler(Filters.text, country)],
         'not_want': [MessageHandler(Filters.text, not_want)],
-        'final_task': [MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_task), MessageHandler(Filters.regex('^(Следующие 5 фильмов)$'), other_five_movies)]
+        'final_task': [
+            MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_task), 
+            MessageHandler(Filters.regex('^(Следующие 5 фильмов)$'), other_five_movies)
+        ]
     },
     fallbacks=[
         MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document | Filters.location, anketa_dontknow)
@@ -42,7 +45,10 @@ def main():
     entry_points=[MessageHandler(Filters.regex('^(Подобрать похожий на...)$'), anketa_reco_start)],
     states={
         'user_movies': [MessageHandler(Filters.text, users_movies)],
-        'final_reco': [MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_reco), MessageHandler(Filters.regex('^(Другие 5 фильмов)$'), other_five_movies_reco)]
+        'final_reco': [
+            MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_reco), 
+            MessageHandler(Filters.regex('^(Другие 5 фильмов)$'), other_five_movies_reco)
+        ]
 
     },
     fallbacks=[
@@ -54,7 +60,10 @@ def main():
     entry_points=[MessageHandler(Filters.regex('^(Подобрать случайный)$'), anketa_random_start)],
     states={
         'anketa_random_result': [MessageHandler(Filters.regex('^(Получить фильм)$'), anketa_random_result)],
-        'final_random': [MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_random), MessageHandler(Filters.regex('^(Подобрать другой случайный фильм)$'), other_random)]
+        'final_random': [
+            MessageHandler(Filters.regex('^(Я нашел нужный фильм)$'), final_random), 
+            MessageHandler(Filters.regex('^(Подобрать другой случайный фильм)$'), other_random)
+        ]
 
     },
     fallbacks=[
