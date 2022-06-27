@@ -1,22 +1,24 @@
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
 from telegram.ext import ConversationHandler
 
+
 def anketa_start(update, context):
     update.message.reply_text(
-        f'"Выбери, что ты хочешь подобрать"', 
+        f'Выбери, что ты хочешь подобрать', 
         reply_markup=ReplyKeyboardMarkup([['Подобрать фильм', 'Подобрать сериал']], one_time_keyboard=True)
     )
     return 'type'
+
 
 def movie_type(update, context):
     type_choice = str(update.message.text)
     context.user_data['anketa'] = {'type': type_choice.split()[1]}
     reply_keyboard = [['Да, хочу чтобы была премия','Наличие премии не важно']]
-    update.message.reply_text(
-        f'Отлично, теперь я буду задавать тебе вопросы, которые помогут мне при подборке! \nВы можете пропустить любой вопрос, нажав на кнопку "не важно"\nВопрос №1: важно ли, чтобы у фильма или сериала была премия Оскар или Эмми?',
+    update.message.reply_text(f'Отлично, теперь я буду задавать тебе вопросы, которые помогут мне при подборке! \nВы можете пропустить любой вопрос, нажав на кнопку "не важно" \nВопрос №1: важно ли, чтобы у фильма или сериала была премия Оскар или Эмми?',
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-        )
+    )
     return 'oskar'
+
 
 def anketa_oskar(update, context):
     oskar_choice = update.message.text
@@ -45,8 +47,12 @@ def anketa_oskar(update, context):
         return 'genre'
     elif oskar_choice.lower() == 'нет': 
         context.user_data['anketa']['oskar'] = 'no'
-        update.message.reply_text(f'Введите желаемый жанр, можно ввести несколько через запятую.\nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True))
+        update.message.reply_text(
+            f'Введите желаемый жанр, можно ввести несколько через запятую.\nНажмите кнопку "Жанр не важен", чтобы пропустить вопрос', 
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True)
+        )
         return 'genre'
+
 
 def genre(update,context):
     genres = str(update.message.text).lower()
@@ -76,6 +82,7 @@ def genre(update,context):
             )
             return 'director'
 
+
 def director(update, context):
     directors = str(update.message.text).lower()
     if directors == 'режиссер не важен':
@@ -94,6 +101,7 @@ def director(update, context):
         #update.message.reply_text(f'Тип: {context.user_data["anketa"]["type"]}, Премия: {context.user_data["anketa"]["oskar"]}, Жанр: {context.user_data["anketa"]["genre"]}, режиссер: {context.user_data["anketa"]["director"]}') 
         return 'actor'
 
+
 def actor(update, context):
     actors = str(update.message.text).lower()
     if actors == 'актер не важен':
@@ -110,6 +118,7 @@ def actor(update, context):
             reply_markup=ReplyKeyboardMarkup([['Год выпуска не важен']], one_time_keyboard=True)
         )
         return 'years'
+
 
 def years(update, context):
     year = str(update.message.text)
@@ -171,7 +180,7 @@ def country(update, context):
             return 'country'
 
         else:
-            context.user_data['anketa']['country'] = countries.lower()
+            context.user_data['anketa']['country'] = countries.lower().split(',')
             update.message.reply_text(
                 f'Ну и последнее: укажите фильмы, которые бы вы не хотели видеть в предложенных.\nМожно ввести несколько через запятую\nЕсли таких фильмов нет, то нажмите на кнопку "Таких фильмов нет"', 
                 reply_markup=ReplyKeyboardMarkup([['Таких фильмов нет']], one_time_keyboard=True)
@@ -179,32 +188,60 @@ def country(update, context):
 
             return 'not_want'
 
+final_movie_list = [
+    'Красотка','Зеленая миля','Бетмен: начало','Форрест Гамп','Перл Харбор',
+    'Храброе сердце','Девчата', 'Терминатор', 'Терминатор 2','Терминатор 3', 'Терминатор 4',
+    'Терминатор 5', 'Терминатор 6', 'Терминатор 7', 'Терминатор 8', 'Терминатор 9'
+]
+
+
 def not_want(update, context):
     not_want_movies = update.message.text
     if not_want_movies == 'Таких фильмов нет':
         context.user_data['anketa']['not_want'] = 'not set'
     else:
         context.user_data['anketa']['not_want'] = str(update.message.text).lower()
-        
 
 
     update.message.reply_text(
         f'Введенные параметры: \nТип: {context.user_data["anketa"]["type"]}, \nПремия: {context.user_data["anketa"]["oskar"]}, \nЖанр: {context.user_data["anketa"]["genre"]}, \nРежиссер: {context.user_data["anketa"]["director"]}, \nАктер: {context.user_data["anketa"]["actor"]}, \nГоды выпуска: {context.user_data["anketa"]["year_start"]} - {context.user_data["anketa"]["year_finish"]}, \nСтрана: {context.user_data["anketa"]["country"]}, \nНе предлагать: {context.user_data["anketa"]["not_want"]}')
     update.message.reply_text('Дайте мне немного времени')
     update.message.reply_text(
-        f'Вот ваша подборка: \nфильм1 \nфильм2 \nфильм3 \nфильм4 \nфильм5',
+        f'Вот ваша подборка: {final_movie_list[:5]}',
         reply_markup=ReplyKeyboardMarkup([['Следующие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
     )
     return 'final_task'
 
+
+def other_five_movies(update, context):
+
+    del final_movie_list[0:5]
+    if len(final_movie_list) > 0:
+        update.message.reply_text(
+            f'Ваши следующие 5 фильмов: {final_movie_list[:5]}',
+            reply_markup=ReplyKeyboardMarkup([['Следующие 5 фильмов', 'Я нашел нужный фильм']], one_time_keyboard=True)
+        )
+        return 'final_task'
+    else:
+        update.message.reply_text(
+            f'Фильмы, подходящие по параметрам закончились, попробуйте задать другие параметры', 
+            reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True)
+        )
+        return ConversationHandler.END   
+
+
 def final_task(update, context):
 
-    update.message.reply_text(f'Рад был помочь!', reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True))
+    update.message.reply_text(
+        f'Рад был помочь!', 
+        reply_markup=ReplyKeyboardMarkup([['Вернуться в начало']], one_time_keyboard=True)
+    )
     return ConversationHandler.END
     
 
 def anketa_dontknow(update, context):
     update.message.reply_text('Я вас не понимаю')
+
 
 
     
